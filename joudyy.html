@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ❤️</title>
+    <style>
+        :root { --bg: #5D0E1D; --accent: #D13E53; --text: #fff5f5; }
+        * { box-sizing: border-box; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Georgia', serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; text-align: center; }
+        
+        .kisses { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.15; z-index: 1; }
+        .kisses span { position: absolute; font-size: 50px; }
+
+        .container { background: rgba(255, 255, 255, 0.08); padding: 30px; border-radius: 25px; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); width: 95%; max-width: 450px; z-index: 10; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .hidden { display: none; }
+        
+        .gif-img { border-radius: 15px; margin: 15px auto; width: 180px; display: block; }
+        .gift-cats-container { display: flex; justify-content: space-around; margin-top: 20px; }
+        .cat-box { cursor: pointer; transition: 0.3s; width: 30%; text-align: center; }
+        .cat-box img { width: 100%; border-radius: 10px; border: 2px solid transparent; }
+        .cat-box:hover img { border-color: white; transform: scale(1.1); }
+
+        .envelope { width: 150px; height: 100px; background: #C4A484; margin: 20px auto; position: relative; cursor: pointer; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .envelope::after { content: '❤️'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25px; }
+
+        .cloud-container { position: relative; height: 380px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; }
+        .cloud-item { position: absolute; background: rgba(255, 255, 255, 0.15); padding: 6px 10px; border-radius: 15px; font-size: 11px; white-space: nowrap; animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .cd-rotate { width: 260px; height: 260px; margin: 15px auto; border-radius: 50%; border: 8px solid rgba(255,255,255,0.3); overflow: hidden; animation: spin 12s linear infinite; box-shadow: 0 0 25px rgba(0,0,0,0.5); }
+        .cd-rotate img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        input { padding: 12px; border-radius: 10px; border: none; width: 80%; margin: 15px 0; text-align: center; background: #fff5f5; color: #5D0E1D; }
+        button { background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .back-btn { background: transparent; border: 1px solid white; font-size: 11px; opacity: 0.6; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="kisses">
+        <span style="top:10%; left:10%">💋</span><span style="top:50%; right:5%">💋</span>
+        <span style="bottom:10%; left:20%">💋</span><span style="top:20%; right:30%">💋</span>
+    </div>
+
+    <div id="step0" class="container">
+        <h2>Private Access Code ✨</h2>
+        <input type="text" id="passInput" placeholder="DD-MM-YYYY">
+        <br><button onclick="checkPass()">Unlock</button>
+    </div>
+
+    <div id="step1" class="container hidden">
+        <h2 style="font-weight: 900;">PLS ACCEPT THE GIFT? </h2>
+        <img class="gif-img" src="https://i.ibb.co/Kkw9Y82/cat-flower.png">
+        <br>
+        <button onclick="toStep(3)">YES</button>
+        <button id="noBtn" onmouseover="moveNo()">NO</button>
+    </div>
+
+    <div id="step2" class="container hidden">
+        <h2>HOW DARE YOU! 🔫</h2>
+        <img class="gif-img" src="https://i.ibb.co/9v8X9N6/cat-gun.png">
+        <br><button onclick="toStep(1)">TRY AGAIN</button>
+    </div>
+
+    <div id="step3" class="container hidden">
+        <h2>GIFT FOR YOU</h2>
+        <div class="gift-cats-container">
+            <div class="cat-box" onclick="showFinal('letter')"><img src="https://i.ibb.co/N2RWs9sQ/cat-gift.png"><br><small>Letter</small></div>
+            <div class="cat-box" onclick="showFinal('traits')"><img src="https://i.ibb.co/N2RWs9sQ/cat-gift.png"><br><small>Things</small></div>
+            <div class="cat-box" onclick="showFinal('photos')"><img src="https://i.ibb.co/N2RWs9sQ/cat-gift.png"><br><small>Photos</small></div>
+        </div>
+    </div>
+
+    <div id="final" class="container hidden">
+        <div id="finalContent"></div>
+        <button class="back-btn" onclick="toStep(3)">Back</button>
+    </div>
+
+    <script>
+        function checkPass() {
+            if(document.getElementById('passInput').value === "14-4-2024") toStep(1);
+            else alert("Wrong date ❤️");
+        }
+
+        function toStep(n) {
+            document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+            document.getElementById(n === 'final' ? 'final' : 'step'+n).classList.remove('hidden');
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * 70 + '%'; btn.style.top = Math.random() * 70 + '%';
+        }
+
+        function showFinal(type) {
+            toStep('final');
+            const box = document.getElementById('finalContent');
+            if(type === 'letter') {
+                box.innerHTML = `<h3>Click to Open ✉️</h3><div class="envelope" onclick="openLetter()"></div>
+                <div id="actualLetter" class="hidden" style="text-align:left; font-style:italic; font-size:13px; background:rgba(0,0,0,0.2); padding:15px; border-radius:10px;">I just wanted to say something honestly, without trying to pressure you or change your mind. I care about you deeply, and my feelings for you were always real. But more than anything, I want you to feel comfortable and at peace, even if that means being away from me. I’m not writing this to make you feel guilty or forced into anything. I completely respect your choices, your space, and whatever you want for your life. I only wanted you to know that you meant a lot to me, and you still do. And no matter what happens, a part of me will probably always care about you and love you in a quiet, sincere way. I truly hope you’re happy, safe, and surrounded by good things. Take care of yourself.</div>`;
+            } else if(type === 'traits') {
+                box.innerHTML = `<h3>Things I Love About You</h3><div class="cloud-container" id="cloud"></div>`;
+                const cloud = document.getElementById('cloud');
+                const traits = ["Your Eyes", "Your Smile", "Beautiful Hair", "Long Eyelashes", "Warm Hands", "Your Maturity", "Gentle Soul", "Natural Beauty", "Your Kindness", "The Calmness", "Ordinary Moments", "Pure Heart", "Effortless Beauty", "Your Voice", "Everything About You"];
+                traits.forEach((t, i) => {
+                    let div = document.createElement('div'); div.className = 'cloud-item';
+                    div.innerText = t; div.style.top = (Math.random() * 80 + 5) + '%';
+                    div.style.left = (Math.random() * 70 + 5) + '%';
+                    div.style.animationDelay = (i * 0.2) + 's'; cloud.appendChild(div);
+                });
+            } else if(type === 'photos') {
+                box.innerHTML = `<h3>Our Memories</h3><p style="font-size:11px; font-style:italic;">Love of my dreams, but better.</p>
+                <div class="cd-rotate">
+                    <img class="cd-img" src="https://i.ibb.co/vCz0NNrJ/image.jpg">
+                    <img class="cd-img" src="https://i.ibb.co/9966Pg5g/image.jpg">
+                    <img class="cd-img" src="https://i.ibb.co/JjwDLsCL/image.jpg">
+                    <img class="cd-img" src="https://i.ibb.co/gMLkhpPX/image.jpg">
+                    <img class="cd-img" src="https://i.ibb.co/jPDr88Ht/image.jpg">
+                    <img class="cd-img" src="https://i.ibb.co/Kcg9yys7/image.jpg">
+                </div>`;
+                startCD();
+            }
+        }
+
+        function openLetter() {
+            document.querySelector('.envelope').style.display = 'none';
+            document.getElementById('actualLetter').classList.remove('hidden');
+        }
+
+        let cdIdx = 0;
+        function startCD() {
+            let imgs = document.getElementsByClassName("cd-img");
+            if(!imgs.length) return;
+            for(let i=0; i<imgs.length; i++) imgs[i].style.display = "none";
+            cdIdx++; if(cdIdx > imgs.length) cdIdx = 1;
+            imgs[cdIdx-1].style.display = "block";
+            setTimeout(startCD, 2000);
+        }
+    </script>
+</body>
+</html>
